@@ -1,1 +1,0 @@
-* Ensure you remove the shooting column as it is empty
