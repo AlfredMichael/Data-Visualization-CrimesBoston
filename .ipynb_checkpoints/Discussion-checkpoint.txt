@@ -1,0 +1,8 @@
+Fnd a way to make the data scarce by using drill downs
+
+1. TreeMap By District
+ii. Drill down to street
+
+remove emtpy lat and long or dont even plot it
+
+Make bar chart easier to see
