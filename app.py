@@ -16,7 +16,13 @@ get_ipython().system('pip install kagglehub')
 
 # In[9]:
 
-
+import dash
+import dash_bootstrap_components as dbc
+from dash import html, dcc, Input, Output
+import plotly.express as px
+import plotly.graph_objects as go
+import calendar
+import random
 import pandas as pd
 import kagglehub
 
@@ -31,7 +37,7 @@ crime_file = f"{path}/NewCombinedCrimeBoston.csv"
 
 '''
 latin1 can handle more characters than the default
-UTF-8 fails 
+UTF-8 fails
 '''
 df = pd.read_csv(crime_file, encoding='latin1')
 
@@ -59,8 +65,7 @@ df = df[(df['Lat'] != 0.0) & (df['Long'] != 0.0)]
 # In[11]:
 
 
-import plotly.express as px
-import random
+
 
 # Remove the timezone information and convert the date column into a datetime object
 df['OCCURRED_ON_DATE'] = df['OCCURRED_ON_DATE'].str.split('+', n=1).str[0]
@@ -115,12 +120,7 @@ random_lon = df.iloc[random_index]['Long']
 # In[13]:
 
 
-import dash
-import dash_bootstrap_components as dbc
-from dash import html, dcc, Input, Output
-import plotly.express as px
-import plotly.graph_objects as go
-import calendar
+
 
 
 # Initialize the Dash app
@@ -142,7 +142,7 @@ app.layout = html.Div(
                     ),
                     # Center text
                     dbc.NavbarBrand(
-                        html.B("Street-Level Crime Analysis in Boston"), 
+                        html.B("Street-Level Crime Analysis in Boston"),
                         className="mx-auto"
                     ),
                     # Right icon
@@ -153,7 +153,7 @@ app.layout = html.Div(
                 ]
             ),
             color="light",
-            className="navbar-light navbar-shadow",  
+            className="navbar-light navbar-shadow",
         ),
         dcc.Tabs(id="web-tabs", value='tab-1', children=[
             dcc.Tab(label='Geospatial Visualization', value='tab-1'),
@@ -161,9 +161,9 @@ app.layout = html.Div(
             dcc.Tab(label='Animated Time-Series Charts', value='tab-3'),
             dcc.Tab(label='Polar Charts (Seasons)', value='tab-4'),
         ]),
-        
+
         html.Div(id='tabs-content')
-        
+
     ]
 )
 #==================================================================UI CALLBACKS===============================================================================
@@ -178,7 +178,7 @@ def render_content(tab):
       return dbc.Container(
             [
                 html.P(
-                    "Data Source: https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system, Please note that the dataset for 2025 and 2015(Now Omitted) is incomplete..",
+                    "Data Source: https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system, please note data is limited from 2020 to 2022..",
                     style={'textAlign': 'center'}
                 ),
                 html.Br(),
@@ -202,7 +202,7 @@ def render_content(tab):
                             ),
                             width=7
                         ),
-                    
+
                         dbc.Col(
                             dcc.Dropdown(
                                 id='ucr-part-dropdown',
@@ -259,7 +259,7 @@ def render_content(tab):
                     style={'textAlign': 'center'}
                 ),
                 html.Div(id='offense-summary')
-                
+
 
             ],
             className="mt-4"
@@ -268,11 +268,11 @@ def render_content(tab):
       return dbc.Container(
             [
                 html.P(
-                    "Data Source: https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system, Please note that the dataset for 2025 and 2015(Now Omitted) is incomplete..",
+                    "Data Source: https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system, please note data is limited from 2020 to 2022..",
                     style={'textAlign': 'center'}
                 ),
                 html.Br(),
-                
+
                 dbc.Row(
                     [
                         dbc.Col(
@@ -293,11 +293,11 @@ def render_content(tab):
                                 placeholder="Select a year"
                             ),
                             width=2
-                        ),         
+                        ),
                        ],
                     justify="center"
-                ), 
-                
+                ),
+
                 html.Br(),
                 dcc.Graph(
                     id="bar-chart",
@@ -320,7 +320,7 @@ def render_content(tab):
                     style={'textAlign': 'center'}
                 ),
 
-                
+
                 html.Br(),
                 dcc.Graph(
                     id="district-bar-chart",
@@ -331,7 +331,7 @@ def render_content(tab):
                     "This stacked bar chart visualizes the distribution of crime incidents across different districts and offense code groups. The data can be filtered based on a selected month or and year to provide specific insights into crime patterns. The chart helps identify which districts are more prone to specific types of crimes, aiding in law enforcement resource allocation and public safety awareness.",
                     style={'textAlign': 'center'}
                 ),
-                
+
             ],
             className="mt-4"
         )
@@ -339,11 +339,11 @@ def render_content(tab):
       return dbc.Container(
             [
                 html.P(
-                    "Data Source: https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system, Please note that the dataset for 2025 and 2015(Now Omitted) is incomplete..",
+                    "Data Source: https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system, please note data is limited from 2020 to 2022..",
                     style={'textAlign': 'center'}
                 ),
                 html.Br(),
-                
+
                 dbc.Row(
                     [
                         dbc.Col(
@@ -382,10 +382,10 @@ def render_content(tab):
                                 placeholder="Select a year"
                             ),
                             width=2
-                        ),         
+                        ),
                        ],
                     justify="center"
-                ), 
+                ),
                 html.Br(),
 
                 dcc.Graph(
@@ -396,8 +396,8 @@ def render_content(tab):
                     "This animated time series chart visualizes the evolution of specific crimes in various districts and cities over the years, offering a clear view of trends and patterns in crime rates.",
                     style={'textAlign': 'center'}
                 ),
-                
-                
+
+
             ],
             className="mt-4"
         )
@@ -405,7 +405,7 @@ def render_content(tab):
       return dbc.Container(
           [
               html.P(
-                    "Data Source: https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system, Please note that the dataset for 2025 and 2015(Now Omitted) is incomplete..",
+                    "Data Source: https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system, please note data is limited from 2020 to 2022..",
                     style={'textAlign': 'center'}
                 ),
               dbc.Row(html.Div(), style={'margin-top': '35px'}),
@@ -453,7 +453,7 @@ def render_content(tab):
                             ),
                             width=2
                       ),
-                      
+
                   ],
                 justify="center"
               ),
@@ -463,10 +463,10 @@ def render_content(tab):
                 html.Button('Back', id='back-button', className='button'),
                 html.Button('Drill Down', id='drilldown-button', className='button')
             ], style={'display': 'flex', 'justify-content': 'center', 'gap': '18px'}),
-         
+
               html.Div(id='summary-text', style={'textAlign': 'center', 'marginTop': '20px'})
           ]
-        
+
       )
 
 #==================================================================END UI CALLBACKS===============================================================================
@@ -629,7 +629,7 @@ def update_offense_summary(selected_district, selected_street, selected_ucr_part
         html.P(f"Total number of cases: {len(filtered_df)}"),
         html.P("Count of cases for each offense code group:"),
         html.Ul([html.Li(f"{row['OFFENSE_CODE_GROUP']}: {row['COUNT']} cases") for index, row in offense_counts.iterrows()])
-        
+
     ]
 
     return offense_summary
@@ -647,7 +647,7 @@ def update_bar_chart(selected_month, selected_year):
         df_filtered = df[df['month'] == selected_month]
     else:
         df_filtered = df.copy()
-    
+
     if selected_year != "All Years":
         df_filtered = df_filtered[df_filtered['YEAR'] == selected_year]
     else:
@@ -659,7 +659,7 @@ def update_bar_chart(selected_month, selected_year):
     hourly_counts = hourly_counts.sort_values(by='Hour')
 
     # Create a bar chart
-    fig = px.bar(hourly_counts, x='Hour', y='Incident Count', 
+    fig = px.bar(hourly_counts, x='Hour', y='Incident Count',
                  title='Crime Clock - 24-hour Distribution',
                  labels={'Hour': 'Hour of the Day', 'Incident Count': 'Number of Incidents'})
 
@@ -693,7 +693,7 @@ def update_district_bar_chart(selected_month, selected_year):
         df_filtered = df[df['month'] == selected_month]
     else:
         df_filtered = df.copy()
-    
+
     if selected_year != "All Years":
         df_filtered = df_filtered[df_filtered['YEAR'] == selected_year]
     else:
@@ -731,10 +731,10 @@ def update_district_bar_chart(selected_month, selected_year):
 def update_line_chart(selected_year, selected_month):
     # Filter data based on the selected year and month
     df_filtered = df.copy()
-    
+
     if selected_year != "All Years":
         df_filtered = df_filtered[df_filtered['YEAR'] == selected_year]
-        
+
     if selected_month != "All Months":
         df_filtered = df_filtered[df_filtered['month'] == selected_month]
 
@@ -797,7 +797,7 @@ def update_offense_group_dropdown(selected_part):
 def update_animated_mapbox(selected_district, selected_part, selected_year, selected_offense_group):
     # Filter data based on the selected year
     df_filtered = df[df['YEAR'] == selected_year]
-    
+
     # Filter data based on the selected district
     if selected_district != "All Districts":
         df_filtered = df_filtered[df_filtered['DISTRICT'] == selected_district]
@@ -809,7 +809,7 @@ def update_animated_mapbox(selected_district, selected_part, selected_year, sele
     # Filter data based on the selected offense code group
     if selected_offense_group:
         df_filtered = df_filtered[df_filtered['OFFENSE_CODE_GROUP'] == selected_offense_group]
-    
+
     # Extract month and day for animation
     df_filtered['Month'] = df_filtered['OCCURRED_ON_DATE'].dt.month_name()
     df_filtered['Month_num'] = df_filtered['OCCURRED_ON_DATE'].dt.month
@@ -822,7 +822,7 @@ def update_animated_mapbox(selected_district, selected_part, selected_year, sele
     # Create an animated Mapbox plot
     fig = px.scatter_mapbox(
         df_filtered,
-        lat='Lat', 
+        lat='Lat',
         lon='Long',
         animation_frame='Month',
         color='OFFENSE_CODE_GROUP',
@@ -845,7 +845,7 @@ def update_animated_mapbox(selected_district, selected_part, selected_year, sele
         mapbox=dict(center=dict(lat=random_lat, lon=random_lon), zoom=10),
         margin={"r":0,"t":0,"l":0,"b":0}
     )
-    
+
     return fig
 
 #-------------------------------------------------------------------------Tab 4-------------------------------------------------------------------------
@@ -899,7 +899,7 @@ def update_polar_chart(selected_district, selected_street, selected_ucr_part, se
     chart_state = 'season'
     if drilldown_clicks and (drilldown_clicks > (back_clicks or 0)):
         chart_state = 'month'
-    
+
     # Filter the DataFrame
     filtered_df = df.copy()
     if selected_year != "All Years":
@@ -910,7 +910,7 @@ def update_polar_chart(selected_district, selected_street, selected_ucr_part, se
         filtered_df = filtered_df[filtered_df['UCR_PART'] == selected_ucr_part]
     if selected_offense_code_group != "All Offense Code Groups":
         filtered_df = filtered_df[filtered_df['OFFENSE_CODE_GROUP'] == selected_offense_code_group]
-    
+
     if chart_state == 'month':
         monthly_counts = filtered_df.groupby("month").size().reset_index(name="count")
         monthly_counts['month_order'] = monthly_counts['month'].apply(lambda x: list(calendar.month_name).index(x))
@@ -932,7 +932,7 @@ def update_polar_chart(selected_district, selected_street, selected_ucr_part, se
         else:
             most_common_month = "N/A"
             summary_text = "No data available for the selected filters."
-            
+
     else:
         def get_season(month):
             if month in ['December', 'January', 'February']:
@@ -943,7 +943,7 @@ def update_polar_chart(selected_district, selected_street, selected_ucr_part, se
                 return 'Summer'
             else:
                 return 'Autumn'
-        
+
         filtered_df['season'] = filtered_df['month'].apply(get_season)
         seasonal_counts = filtered_df.groupby("season").size().reset_index(name="count")
         season_order = ['Winter', 'Spring', 'Summer', 'Autumn']
@@ -967,7 +967,7 @@ def update_polar_chart(selected_district, selected_street, selected_ucr_part, se
             most_common_season = "N/A"
             summary_text = "No data available for the selected filters."
 
-    
+
     if selected_year != "All Years":
         title_text += f" for {selected_year}"
     if selected_street != "All Streets":
@@ -976,7 +976,7 @@ def update_polar_chart(selected_district, selected_street, selected_ucr_part, se
         title_text += f" for {selected_ucr_part}"
     if selected_offense_code_group != "All Offense Code Groups":
         title_text += f" ({selected_offense_code_group})"
-    
+
     fig = go.Figure(data=data)
     fig.update_layout(
         polar=dict(
@@ -984,15 +984,19 @@ def update_polar_chart(selected_district, selected_street, selected_ucr_part, se
         ),
         title=title_text
     )
-    
+
     return fig, summary_text
-    
+
 #==================================================================END FUNCTIONALITY CALLBACKS===============================================================================
 
 # Run the app
-if __name__ == "__main__":
-    app.run_server(debug=True)
-# server = app.server
+
+# Expose the server variable for WSGI to use
+server = app.server
+
+# Run the app
+#if __name__ == "__main__":
+    #app.run_server(debug=True)
 
 
 # In[ ]:
